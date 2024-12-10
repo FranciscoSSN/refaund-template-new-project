@@ -95,10 +95,14 @@ function expenseAdd(newExpense) {
         // Adiciona o item na lista (ul)
         expenseList.append(expenseItem)
 
+        // Limpar campos do formulário
+        formClear()
+
         // Chamando função que atualiza os totais
         updateTotals()
 
-
+        // Salvar no localStorage
+        saveExpensesToLocalStorage()
     } catch (error) {
         alert("Não foi possível atualizar a lista de despesas")
         console.log(error)
@@ -173,3 +177,39 @@ expenseList.addEventListener("click", (event) => {
     // Atualizar os totais
     updateTotals()
 })
+
+// Limpar os campos
+function formClear() {
+    // limpa campos do input
+    amout.value = ""
+    category.value = ""
+    expense.value = ""
+
+    // Foca no input expense depois de adicionar um item a lista
+    expense.focus()
+}
+
+// Função para salvar as despesas no localStorage
+function saveExpensesToLocalStorage() {
+    try {
+        // Obter todas as despesas da lista
+        const items = [...expenseList.children].map((item) => {
+            const expenseName = item.querySelector("strong").textContent;
+            const categoryName = item.querySelector(".expense-info span").textContent;
+            const categoryIconSrc = item.querySelector("img").getAttribute("src");
+            const expenseAmount = item.querySelector(".expense-amount").textContent;
+
+            return {
+                expense: expenseName,
+                category_name: categoryName,
+                category_icon: categoryIconSrc,
+                amount: expenseAmount,
+            };
+        });
+
+        // Salvar os dados no localStorage como uma string JSON
+        localStorage.setItem("expenses", JSON.stringify(items));
+    } catch (error) {
+        console.log("Erro ao salvar despesas no localStorage:", error);
+    }
+}
