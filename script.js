@@ -7,6 +7,7 @@ const category = document.querySelector("#category") // salvando opção categor
 // Seleciona os elementos da lista
 const expenseList = document.querySelector("ul")
 const expenseQuantity = document.querySelector("aside header p span")
+const expensesTotal = document.querySelector("aside header h2")
 
 // capturando evento do input de dispesa
 amout.oninput = () => {
@@ -112,6 +113,45 @@ function updateTotals() {
         
         // Atualizar a quantidade de items da lista
         expenseQuantity.textContent = `${items.length} ${items.length > 1 ? "despesas" : "despesa"}`
+
+        // Variável para incrementar o total
+        let total = 0
+
+        // Percorrer cada item (li) da lista (ul)
+        for(let item = 0; item < items.length; item++) {
+            const itemAmount = items[item].querySelector(".expense-amount")
+
+            // Remover os não númericos e subistituir a vírgula pelo ponto
+            let value = itemAmount.textContent.replace(/[^\d,]/g, "").replace(",", ".")
+
+            // Converter o valor para Float
+            value = parseFloat(value)
+
+            // Verificar se ele é um número valido
+            if(isNaN(value)) {
+                alert("Não foi possível calcular o total. O valor não parece ser um número")
+            }
+
+            // Incremento do valor total
+            total += Number(value)
+        }
+
+        // Exibir o valor total
+        // expensesTotal.textContent = total
+
+        // Criar o span para adicionar o R$ formatado
+        const symbolBRL = document.createElement("small")
+        symbolBRL.textContent = "R$"
+
+        // Formata o valor e remover o R$ que será exibido pela small com um estilo customizado
+        total = formatCurrencyBRL(total).toUpperCase().replace("R$", "")
+
+        // Limpar o conteúdo do elemento
+        expensesTotal.innerHTML = ""
+
+        // Adiciona o símbolo da moeda e do falor formatado
+        expensesTotal.append(symbolBRL, total)
+
 
     } catch (error) {
         console.log(error)
