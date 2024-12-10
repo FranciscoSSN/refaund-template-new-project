@@ -176,6 +176,7 @@ expenseList.addEventListener("click", (event) => {
 
     // Atualizar os totais
     updateTotals()
+    saveExpensesToLocalStorage()
 })
 
 // Limpar os campos
